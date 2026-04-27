@@ -83,7 +83,7 @@ function Linktree() {
         <div className="absolute -inset-2 bg-linear-to-tr from-street-blue to-street-green opacity-20 group-hover:opacity-40 blur-2xl transition-opacity duration-500 rounded-full"></div>
         <div className="w-28 h-28 rounded-full bg-concrete border-2 border-white/10 overflow-hidden relative flex items-center justify-center p-0.5">
           <div className="w-full h-full rounded-full bg-zinc-900 flex items-center justify-center border border-white/5">
-            <img src=".\public\profile.jpg" alt="profile" className="rounded-[100%] w-25" />
+            <img src="\profile.jpg" alt="profile" className="rounded-[100%] w-25" />
           </div>
         </div>
       </motion.div>
@@ -128,7 +128,7 @@ function Linktree() {
           to="https://wa.me/5515998571316?text=Oi%21%20Tudo%20bem%3F%20Quero%20entender%20melhor%20como%20funcionam%20os%20seus%20servi%C3%A7os" target="_blank"
           className="w-full py-5 bg-white text-obsidian rounded-2xl font-bold flex items-center justify-center gap-3 hover:scale-[1.02] active:scale-95 transition-transform cursor-pointer group shadow-2xl shadow-street-blue/10"
         >
-          <img src="public\whatsapp-2.svg" className="w-5 h-5 text-street-blue" />
+          <img src="\whatsapp.svg" className="w-5 h-5 text-street-blue" />
           FALE COMIGO NO WHATSAPP
           <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
         </Link>
