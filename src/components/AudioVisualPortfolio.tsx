@@ -6,49 +6,8 @@ import {
   Video,
   ArrowRight,
 } from 'lucide-react';
-import { supabase } from '../utils/supabase';
 
 export function AudioVisualPortfolio() {
-  const [videos, setVideos] = useState<VideoProject[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const navigate = useNavigate();
-
-interface VideoProject {
-  id: string;
-  title: string;
-  role: string;
-  thumbnail_url: string;
-  video_url: string;
-}
-
-  useEffect(() => {
-    async function fetchVideos() {
-      try {
-        // Busca os dados da tabela 'videos_portfolio' ordenando pelos mais recentes
-        const { data, error } = await supabase
-          .from('videos_portfolio')
-          .select('*')
-          .order('created_at', { ascending: false });
-
-        if (error) throw error;
-        if (data) setVideos(data);
-      } catch (error) {
-        console.error("Erro ao buscar vídeos do Supabase:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-    fetchVideos();
-  }, []);
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-100">
-        <div className="w-8 h-8 border-2 border-street-green border-t-transparent rounded-full animate-spin"></div>
-      </div>
-    );
-  }
-
   return (
     <motion.div
       initial={{ opacity: 0, scale: 1.05 }}
@@ -57,7 +16,7 @@ interface VideoProject {
       className="max-w-5xl mx-auto px-6 py-20"
     >
       <button
-        onClick={() => navigate('/')}
+        onClick={() => useNavigate()('/')}
         className="mb-12 text-zinc-500 flex items-center gap-2 hover:text-white transition-colors cursor-pointer group font-mono text-sm uppercase tracking-widest"
       >
         <ArrowRight className="w-4 h-4 rotate-180 group-hover:-translate-x-1 transition-transform" />
