@@ -11,8 +11,7 @@ import {
   ExternalLink
 } from 'lucide-react';
 
-export function Linktree() {
-  const links = [
+export function Linktree({ user, onLogin, onLogout }: any) {  const links = [
     {
       title: 'LinkedIn Profissional',
       href: 'https://www.linkedin.com/in/vitor-daniel-b7133b2ab/',
@@ -37,6 +36,7 @@ export function Linktree() {
       exit={{ opacity: 0, scale: 0.95 }}
       className="max-w-md mx-auto px-6 pt-20 pb-16 flex flex-col items-center"
     >
+
       {/* Profile Header */}
       <motion.div
         initial={{ y: 30, opacity: 0 }}
@@ -149,6 +149,13 @@ export function Linktree() {
         ))}
       </div>
 
+      <button 
+        onClick={user ? onLogout : onLogin}
+        className="mt-10 text-[10px] font-mono uppercase tracking-widest text-zinc-700 hover:text-zinc-400 transition-colors cursor-pointer"
+      >
+        {user ? '[ Sair do Modo Admin ]' : '[ Admin Access ]'}
+      </button>
+      
       <motion.footer
         initial={{ opacity: 0 }}
         animate={{ opacity: 0.4 }}
