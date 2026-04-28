@@ -103,9 +103,7 @@ export function TechPortfolio() {
           </div>
           <h3 className="text-street-green font-mono text-xs mb-6 uppercase tracking-[0.3em]">{'@ root/bio'}</h3>
           <p className="text-xl sm:text-2xl font-light leading-relaxed text-zinc-200">
-            "Transformo linhas de código em soluções que já estão operando em produção. 
-            Minha abordagem une a <span className="text-white font-bold">precisão da engenharia</span> com a 
-            <span className="text-street-blue"> estética do audiovisual</span>, entregando valor real para empresas e usuários."
+            "Desenvolvedor curioso apaixonado por tecnologia e inovação. Sempre em busca de novas colaborações e experiências!"
           </p>
         </section>
         

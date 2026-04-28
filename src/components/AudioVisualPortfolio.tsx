@@ -1,17 +1,53 @@
+import { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
-import {
-  BrowserRouter as Router,
-  useNavigate,
-} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   Instagram,
   Video,
   ArrowRight,
 } from 'lucide-react';
-import { image } from 'framer-motion/client';
+import { supabase } from '../utils/supabase';
 
 export function AudioVisualPortfolio() {
+  const [videos, setVideos] = useState<VideoProject[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
+
+interface VideoProject {
+  id: string;
+  title: string;
+  role: string;
+  thumbnail_url: string;
+  video_url: string;
+}
+
+  useEffect(() => {
+    async function fetchVideos() {
+      try {
+        // Busca os dados da tabela 'videos_portfolio' ordenando pelos mais recentes
+        const { data, error } = await supabase
+          .from('videos_portfolio')
+          .select('*')
+          .order('created_at', { ascending: false });
+
+        if (error) throw error;
+        if (data) setVideos(data);
+      } catch (error) {
+        console.error("Erro ao buscar vídeos do Supabase:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    fetchVideos();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-100">
+        <div className="w-8 h-8 border-2 border-street-green border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
 
   return (
     <motion.div

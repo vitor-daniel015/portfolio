@@ -45,9 +45,9 @@ export function Linktree({ user, onLogin, onLogout }: any) {  const links = [
         className="relative mb-8 group"
       >
         <div className="absolute -inset-2 bg-linear-to-tr from-street-blue to-street-green opacity-20 group-hover:opacity-40 blur-2xl transition-opacity duration-500 rounded-full"></div>
-        <div className="w-28 h-28 rounded-full bg-concrete border-2 border-white/10 overflow-hidden relative flex items-center justify-center p-0.5">
+        <div className="w-45 h-45 rounded-full bg-concrete border-2 border-white/10 overflow-hidden relative flex items-center justify-center p-0.5">
           <div className="w-full h-full rounded-full bg-zinc-900 flex items-center justify-center border border-white/5">
-            <img src="\profile.jpg" alt="profile" className="rounded-[100%] w-25" />
+            <img src="\profile.jpg" alt="profile" className="rounded-[100%] w-45 h-45" />
           </div>
         </div>
       </motion.div>
