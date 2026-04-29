@@ -12,6 +12,7 @@ import {
   LogOut,
   Lock
 } from 'lucide-react';
+import { useAdmin } from '../context/AdminContext';
 
 interface LinktreeProps {
   isAdmin: boolean;
@@ -19,35 +20,29 @@ interface LinktreeProps {
   login: (p: string) => boolean;
 }
 
-export function Linktree({ isAdmin, logout, login }: LinktreeProps) {
+export function Linktree() {
+  const { isAdmin, login, logout } = useAdmin();
   const [showPasswordInput, setShowPasswordInput] = useState(false);
   const [password, setPassword] = useState('');
 
   const links = [
     { 
-      title: 'Fale comigo no WhatsApp', 
-      url: 'https://wa.me/5515998135891', 
-      icon: <MessageCircle className="w-5 h-5" />, 
-      color: 'bg-[#25D366]',
-      delay: 0.1
-    },
-    { 
-      title: 'Meu GitHub', 
+      title: 'GitHub', 
       url: 'https://github.com/vitor-daniel015', 
       icon: <Github className="w-5 h-5" />, 
       color: 'bg-[#24292e]',
       delay: 0.2
     },
     { 
-      title: 'LinkedIn Profissional', 
-      url: 'https://www.linkedin.com/in/vitor-daniel-04b3a123a/', 
+      title: 'LinkedIn', 
+      url: 'https://www.linkedin.com/in/vitor-daniel-b7133b2ab/', 
       icon: <Linkedin className="w-5 h-5" />, 
       color: 'bg-[#0077B5]',
       delay: 0.3
     },
     { 
-      title: 'Instagram Creative', 
-      url: 'https://www.instagram.com/vitor__daniell/', 
+      title: 'Instagram', 
+      url: 'https://www.instagram.com/vdzxs015', 
       icon: <Instagram className="w-5 h-5" />, 
       color: 'bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888]',
       delay: 0.4
@@ -115,9 +110,9 @@ export function Linktree({ isAdmin, logout, login }: LinktreeProps) {
         animate={{ y: 0, opacity: 1 }}
         className="relative mb-12"
       >
-        <div className="w-32 h-32 rounded-[2.5rem] overflow-hidden border-2 border-street-blue/30 shadow-2xl relative z-10">
+        <div className="w-48 h-48 rounded-[100%] overflow-hidden border-2 border-street-blue/30 shadow-2xl relative z-10">
           <img 
-            src="https://github.com/vitor-daniel015.png" 
+            src="/profile.jpg" 
             alt="Vitor Daniel" 
             className="w-full h-full object-cover"
           />
@@ -128,8 +123,41 @@ export function Linktree({ isAdmin, logout, login }: LinktreeProps) {
 
       <div className="text-center mb-12">
         <h1 className="text-4xl font-bold tracking-tighter mb-2">Vitor Daniel</h1>
-        <p className="text-zinc-500 font-mono text-xs uppercase tracking-[0.3em]">Fullstack Dev & Filmmaker</p>
+        <p className="text-zinc-500 font-mono text-xs uppercase tracking-[0.3em]"> Dev & Filmmaker</p>
       </div>
+
+{/* Primary Call to Action */}
+      <motion.div
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.2 }}
+        className="w-full mb-8"
+      >
+        <Link
+          to="/portfolio"
+          className="w-full py-5 bg-white text-obsidian rounded-2xl font-bold flex items-center justify-center gap-3 hover:scale-[1.02] active:scale-95 transition-transform cursor-pointer group shadow-2xl shadow-street-blue/10"
+        >
+          <Code2 className="w-5 h-5 text-street-blue" />
+          ACESSAR MEU PORTFÓLIO
+          <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+        </Link>
+      </motion.div>
+
+      <motion.div
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.2 }}
+        className="w-full mb-8"
+      >
+        <Link
+          to="https://wa.me/5515998571316?text=Oi%21%20Tudo%20bem%3F%20Quero%20entender%20melhor%20como%20funcionam%20os%20seus%20servi%C3%A7os" target="_blank"
+          className="w-full py-5 bg-white text-obsidian rounded-2xl font-bold flex items-center justify-center gap-3 hover:scale-[1.02] active:scale-95 transition-transform cursor-pointer group shadow-2xl shadow-street-blue/10"
+        >
+          <img src="\whatsapp.svg" className="w-5 h-5 text-street-blue" />
+          FALE COMIGO NO WHATSAPP
+          <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+        </Link>
+      </motion.div> 
 
       {/* Navigation Buttons */}
       <motion.div 
@@ -178,7 +206,7 @@ export function Linktree({ isAdmin, logout, login }: LinktreeProps) {
 
       {/* Footer */}
       <footer className="mt-20 text-center">
-        <p className="text-[10px] font-mono text-zinc-600 uppercase tracking-widest">Daniel Portfolio © 2026</p>
+        <p className="text-[10px] font-mono text-zinc-600 uppercase tracking-widest">Vitor Daniel Portfolio © 2026</p>
       </footer>
     </motion.div>
   );

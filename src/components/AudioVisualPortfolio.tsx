@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { ArrowRight, Video as VideoIcon, Plus, Smartphone } from 'lucide-react';
 import { getSupabase } from '../utils/supabase';
 import { VideoEntry, OperationType } from '../types';
@@ -120,8 +120,9 @@ export function AudioVisualPortfolio({ isAdmin }: { isAdmin: boolean }) {
               <span className="px-3 py-1 bg-white/10 backdrop-blur-md text-[9px] rounded-full uppercase tracking-widest border border-white/10">Multi-Cam</span>
             </div>
           </div>
+          <Link to="https://www.youtube.com/@RodeioFivelados" className="absolute inset-0 z-20"  target="_blank"/>
           <img 
-            src="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?q=80&w=1200&auto=format&fit=crop" 
+            src="/fivelados.jpg" 
             className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:scale-105 transition-transform duration-700" 
             alt="Fivelados Highlight"
           />
@@ -166,7 +167,8 @@ export function AudioVisualPortfolio({ isAdmin }: { isAdmin: boolean }) {
         <div className="mt-16 py-10 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-6">
            <p className="text-zinc-500 text-sm font-mono tracking-tight underline decoration-street-green/20 underline-offset-8">Disponível para novos projetos de edição e captação.</p>
            <a 
-            href="https://wa.me/5515998135891" 
+            href="https://wa.me/5515998571316?text=Oi%21%20Tudo%20bem%3F%20Quero%20entender%20melhor%20como%20funcionam%20os%20seus%20servi%C3%A7os" 
+            target="_blank"
             className="py-4 px-8 bg-street-green text-obsidian rounded-full font-bold uppercase tracking-widest text-[10px] hover:scale-105 transition-transform active:scale-95 shadow-xl shadow-street-green/20 cursor-pointer"
           >
               Solicitar Orçamento

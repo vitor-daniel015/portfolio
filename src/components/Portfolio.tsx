@@ -1,9 +1,12 @@
 import { motion } from 'motion/react';
 import { AudioVisualPortfolio } from '../components/AudioVisualPortfolio';
 import { TechPortfolio } from '../components/TechPortfolio';
+import { AdminProvider, useAdmin } from '../context/AdminContext';
 
 
 export function Portfolio() {
+  const { isAdmin } = useAdmin();
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -13,7 +16,7 @@ export function Portfolio() {
     >
       <TechPortfolio />
       <div className="h-px w-full bg-white/5 my-10" />
-      <AudioVisualPortfolio />
-    </motion.div>
+      <AudioVisualPortfolio isAdmin={isAdmin} />    
+      </motion.div>
   );
 }

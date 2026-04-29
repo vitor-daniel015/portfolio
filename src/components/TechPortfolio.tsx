@@ -101,7 +101,6 @@ export function TechPortfolio() {
           <div className="absolute top-0 right-0 p-4 opacity-5 text-street-blue pointer-events-none">
             <Code2 size={120} />
           </div>
-          <h3 className="text-street-green font-mono text-xs mb-6 uppercase tracking-[0.3em]">{'@ root/bio'}</h3>
           <p className="text-xl sm:text-2xl font-light leading-relaxed text-zinc-200">
             "Desenvolvedor curioso apaixonado por tecnologia e inovação. Sempre em busca de novas colaborações e experiências!"
           </p>
