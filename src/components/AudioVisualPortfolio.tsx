@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useNavigate, Link } from 'react-router-dom';
-import { ArrowRight, Video as VideoIcon, Plus, Smartphone } from 'lucide-react';
+import { ArrowRight, Video as VideoIcon, Plus, Smartphone, ChevronLeft, ChevronRight } from 'lucide-react';
 import { getSupabase } from '../utils/supabase';
 import { VideoEntry, OperationType } from '../types';
 import { handleDataError } from '../utils/errors';
@@ -13,6 +13,9 @@ export function AudioVisualPortfolio({ isAdmin }: { isAdmin: boolean }) {
   const [videos, setVideos] = useState<VideoEntry[]>([]);
   const [showAddForm, setShowAddForm] = useState(false);
   const [loading, setLoading] = useState(true);
+  
+  // Referência para o container do carrossel no mobile
+  const carouselRef = useRef<HTMLDivElement>(null);
 
   const fetchVideos = async () => {
     try {
@@ -33,7 +36,6 @@ export function AudioVisualPortfolio({ isAdmin }: { isAdmin: boolean }) {
   useEffect(() => {
     fetchVideos();
     
-    // Subscribe to changes
     const supabase = getSupabase();
     const channel = supabase
       .channel('videos_changes')
@@ -46,6 +48,40 @@ export function AudioVisualPortfolio({ isAdmin }: { isAdmin: boolean }) {
       getSupabase().removeChannel(channel);
     };
   }, []);
+
+  // --- LÓGICA DO CARROSSEL (APENAS MOBILE) ---
+  const scrollNext = () => {
+    if (carouselRef.current && window.innerWidth < 768) { // Só executa no mobile
+      const { scrollLeft, scrollWidth, clientWidth } = carouselRef.current;
+      
+      // Se chegou no final, volta para o primeiro
+      if (scrollLeft + clientWidth >= scrollWidth - 10) {
+        carouselRef.current.scrollTo({ left: 0, behavior: 'smooth' });
+      } else {
+        // Avança a largura de um card aproximadamente
+        carouselRef.current.scrollBy({ left: clientWidth * 0.85, behavior: 'smooth' });
+      }
+    }
+  };
+
+  const scrollPrev = () => {
+    if (carouselRef.current && window.innerWidth < 768) {
+      carouselRef.current.scrollBy({ left: -(carouselRef.current.clientWidth * 0.85), behavior: 'smooth' });
+    }
+  };
+
+  // Passar automaticamente a cada 10 segundos (só no mobile)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      // Verifica se a tela é menor que 768px (Mobile/Tablet)
+      if (window.innerWidth < 768) {
+        scrollNext();
+      }
+    }, 10000);
+
+    return () => clearInterval(interval);
+  }, []);
+  // -------------------------------------------
 
   const handleDelete = async (id: string) => {
     if (!window.confirm('Excluir este vídeo?')) return;
@@ -150,17 +186,41 @@ export function AudioVisualPortfolio({ isAdmin }: { isAdmin: boolean }) {
              {isAdmin && <p className="text-zinc-600 text-xs mt-2">Clique em "Adicionar Vídeo" para começar.</p>}
           </div>
         ) : (
-          <div className="flex overflow-x-auto md:grid md:grid-cols-3 gap-6 snap-x snap-mandatory pb-8 md:pb-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-            {videos.map((video) => (
-              <div key={video.id} className="min-w-[85vw] sm:min-w-[50vw] md:min-w-0 snap-center shrink-0">
-                <VideoCard 
-                  video={video} 
-                  isAdmin={isAdmin} 
-                  onDelete={() => handleDelete(video.id)} 
-                  isWide={false}
-                />
-              </div>
-            ))}
+          <div className="relative w-full">
+            
+            {/* Seta Esquerda (Aparece SÓ no mobile) */}
+            <button 
+              onClick={scrollPrev}
+              className="absolute left-2 top-1/2 -translate-y-1/2 z-30 bg-obsidian/80 text-white p-2.5 rounded-full shadow-2xl md:hidden border border-white/10 backdrop-blur-md active:scale-95 transition-transform"
+            >
+              <ChevronLeft size={20} />
+            </button>
+
+            {/* Container Híbrido: Flex/Carrossel no Mobile, Grid de 3 colunas no Desktop */}
+            <div 
+              ref={carouselRef}
+              className="flex overflow-x-auto md:grid md:grid-cols-3 gap-6 snap-x snap-mandatory pb-8 md:pb-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] scroll-smooth"
+            >
+              {videos.map((video) => (
+                <div key={video.id} className="min-w-[85vw] sm:min-w-[50vw] md:min-w-0 md:w-auto snap-center shrink-0">
+                  <VideoCard 
+                    video={video} 
+                    isAdmin={isAdmin} 
+                    onDelete={() => handleDelete(video.id)} 
+                    isWide={false}
+                  />
+                </div>
+              ))}
+            </div>
+
+            {/* Seta Direita (Aparece SÓ no mobile) */}
+            <button 
+              onClick={scrollNext}
+              className="absolute right-2 top-1/2 -translate-y-1/2 z-30 bg-obsidian/80 text-white p-2.5 rounded-full shadow-2xl md:hidden border border-white/10 backdrop-blur-md active:scale-95 transition-transform"
+            >
+              <ChevronRight size={20} />
+            </button>
+
           </div>
         )}
 
