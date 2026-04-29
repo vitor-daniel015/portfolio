@@ -9,6 +9,20 @@ interface VideoCardProps {
 }
 
 export function VideoCard({ video, isAdmin, onDelete, isWide }: VideoCardProps) {
+  // Gera thumbnail automática se estiver vazia no banco (apenas YouTube)
+  const getThumbnail = () => {
+    if (video.thumbnail && video.thumbnail !== 'EMPTY') return video.thumbnail;
+    
+    const ytRegex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=|shorts\/)|youtu\.be\/)([^"&?\/\s]{11})/;
+    const match = video.url.match(ytRegex);
+    if (match && match[1]) {
+      return `https://img.youtube.com/vi/${match[1]}/maxresdefault.jpg`;
+    }
+    return null;
+  };
+
+  const activeThumbnail = getThumbnail();
+
   return (
     <div className={`
       ${isWide ? 'md:col-span-1' : ''}
@@ -28,16 +42,27 @@ export function VideoCard({ video, isAdmin, onDelete, isWide }: VideoCardProps) 
         <span className="text-[8px] font-mono text-zinc-500 uppercase tracking-widest">00:00:24:12</span>
       </div>
 
-      {video.thumbnail ? (
+      {activeThumbnail ? (
         <img 
-          src={video.thumbnail} 
-          alt={video.title} 
+          src={activeThumbnail} 
+          alt={video.title}
           className="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:opacity-50 transition-all duration-700 group-hover:scale-105"
           referrerPolicy="no-referrer"
+          onError={(e) => {
+            // Fallback caso a imagem maxresdefault não exista (vídeos pequenos)
+            (e.target as HTMLImageElement).src = `https://img.youtube.com/vi/${video.url.match(/([^"&?\/\s]{11})$/)?.[1]}/hqdefault.jpg`;
+          }}
         />
       ) : (
-        <div className="absolute inset-0 bg-linear-to-br from-zinc-800 to-zinc-950 flex items-center justify-center opacity-70">
-           <Play className="text-white/10 w-20 h-20" />
+        <div className="absolute inset-0 bg-linear-to-br from-zinc-800 to-obsidian flex items-center justify-center opacity-70 group-hover:opacity-40 transition-opacity">
+           <div className="relative">
+             <Play className="text-white/10 w-24 h-24" />
+             <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-12 h-12 rounded-full bg-street-green/20 flex items-center justify-center">
+                  <Play className="text-street-green fill-street-green w-4 h-4 ml-0.5" />
+                </div>
+             </div>
+           </div>
         </div>
       )}
 

@@ -20,6 +20,29 @@ export function VideoAddForm({ onClose, onSuccess }: VideoAddFormProps) {
   });
   const [loading, setLoading] = useState(false);
 
+  const extractThumbnail = (videoUrl: string) => {
+    // YouTube Regex
+    const ytRegex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
+    const match = videoUrl.match(ytRegex);
+    
+    if (match && match[1]) {
+      return `https://img.youtube.com/vi/${match[1]}/maxresdefault.jpg`;
+    }
+    return '';
+  };
+
+  const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const url = e.target.value;
+    setFormData(prev => {
+      const newData = { ...prev, url };
+      // Se a thumbnail estiver vazia, tenta extrair do novo URL
+      if (!prev.thumbnail || prev.thumbnail.includes('youtube.com')) {
+        newData.thumbnail = extractThumbnail(url) || prev.thumbnail;
+      }
+      return newData;
+    });
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -81,10 +104,10 @@ export function VideoAddForm({ onClose, onSuccess }: VideoAddFormProps) {
               <input 
                 required
                 type="url" 
-                placeholder="YouTube / Vimeo Link" 
+                placeholder="Cole o link do YouTube aqui" 
                 className="w-full bg-zinc-900 border border-white/5 rounded-2xl px-5 py-4 focus:ring-2 focus:ring-street-blue outline-none transition-all placeholder:text-zinc-700 text-sm"
                 value={formData.url}
-                onChange={e => setFormData({ ...formData, url: e.target.value })}
+                onChange={handleUrlChange}
               />
             </div>
             <div className="space-y-2">
