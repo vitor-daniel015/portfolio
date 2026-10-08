@@ -1,4 +1,4 @@
-import { OperationType, FirestoreErrorInfo } from '../types';
+import { OperationType } from '../types';
 
 export function handleDataError(error: unknown, operationType: OperationType, path: string | null) {
   const errInfo = {
@@ -7,5 +7,8 @@ export function handleDataError(error: unknown, operationType: OperationType, pa
     path
   };
   console.error('Data Error: ', JSON.stringify(errInfo));
-  throw new Error(JSON.stringify(errInfo));
+  if (typeof error === 'object' && error !== null && 'code' in error && error.code === 'PGRST205') {
+    return 'O catálogo de vídeos ainda não está disponível. Tente novamente mais tarde.';
+  }
+  return 'Não foi possível concluir a operação. Tente novamente.';
 }

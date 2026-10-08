@@ -17,6 +17,6 @@ export const getSupabase = () => {
 };
 
 // For backward compatibility while I update other files
-export const supabase = (import.meta as any).env.VITE_SUPABASE_URL 
-  ? createClient((import.meta as any).env.VITE_SUPABASE_URL, (import.meta as any).env.VITE_SUPABASE_PUBLISHABLE_KEY)
+export const supabase = (import.meta as any).env.VITE_SUPABASE_URL && (import.meta as any).env.VITE_SUPABASE_PUBLISHABLE_KEY
+  ? getSupabase()
   : null;

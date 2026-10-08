@@ -19,7 +19,7 @@ export function TechPortfolio() {
       title: "Oportuniza",
       desc: "TCC focado em serviços domésticos. Ideia de startup para centralizar demandas operacionais.",
       tags: ['TCC', 'FULL-STACK', 'UX'],
-      link: "#",
+      link: "https://oportuniza.netlify.app/",
       image: "/oportuniza.png"
     },
     {
@@ -28,6 +28,13 @@ export function TechPortfolio() {
       tags: ['PRODUÇÃO', 'STREAMING', 'VITE'],
       link: "https://radiobraba.com.br",
       image: "/radiobraba.jpeg"
+    },
+    {
+      title: "VM Mídias",
+      desc: "Site instituicional para empresa de mídia e marketing digital. Foco em conversão e apresentação de portfólio.",
+      tags: ['FULL-STACK', 'LANDING PAGE', 'EMPRESARIAL'],
+      link: "https://vmmidias.com.br",
+      image: "/vmmidas.png"
     },
     {
       title: "JG Modas",

@@ -19,6 +19,7 @@ export function VideoAddForm({ onClose, onSuccess }: VideoAddFormProps) {
     category: 'filmmaker' as const
   });
   const [loading, setLoading] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const extractThumbnail = (videoUrl: string) => {
     // YouTube Regex
@@ -46,6 +47,7 @@ export function VideoAddForm({ onClose, onSuccess }: VideoAddFormProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setSubmitError(null);
     try {
       const { error } = await getSupabase()
         .from('videos')
@@ -57,7 +59,7 @@ export function VideoAddForm({ onClose, onSuccess }: VideoAddFormProps) {
       if (error) throw error;
       onSuccess();
     } catch (error) {
-      handleDataError(error, OperationType.CREATE, 'videos');
+      setSubmitError(handleDataError(error, OperationType.CREATE, 'videos'));
     } finally {
       setLoading(false);
     }
@@ -86,6 +88,7 @@ export function VideoAddForm({ onClose, onSuccess }: VideoAddFormProps) {
         <h3 className="text-2xl font-bold mb-8 tracking-tighter">Novo Vídeo</h3>
 
         <form onSubmit={handleSubmit} className="space-y-6">
+          {submitError && <p role="alert" className="text-red-400 text-sm">{submitError}</p>}
           <div className="space-y-2">
             <label className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest ml-1">Título do Projeto</label>
             <input 

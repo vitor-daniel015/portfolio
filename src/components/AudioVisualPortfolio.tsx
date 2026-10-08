@@ -13,11 +13,15 @@ export function AudioVisualPortfolio({ isAdmin }: { isAdmin: boolean }) {
   const [videos, setVideos] = useState<VideoEntry[]>([]);
   const [showAddForm, setShowAddForm] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
   
   // Referência para o container do carrossel no mobile
   const carouselRef = useRef<HTMLDivElement>(null);
 
   const fetchVideos = async () => {
+    setLoading(true);
+    setLoadError(null);
     try {
       const { data, error } = await getSupabase()
         .from('videos')
@@ -27,7 +31,7 @@ export function AudioVisualPortfolio({ isAdmin }: { isAdmin: boolean }) {
       if (error) throw error;
       setVideos(data || []);
     } catch (error) {
-      handleDataError(error, OperationType.LIST, 'videos');
+      setLoadError(handleDataError(error, OperationType.LIST, 'videos'));
     } finally {
       setLoading(false);
     }
@@ -36,7 +40,12 @@ export function AudioVisualPortfolio({ isAdmin }: { isAdmin: boolean }) {
   useEffect(() => {
     fetchVideos();
     
-    const supabase = getSupabase();
+    let supabase;
+    try {
+      supabase = getSupabase();
+    } catch {
+      return;
+    }
     const channel = supabase
       .channel('videos_changes')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'videos' }, () => {
@@ -45,7 +54,7 @@ export function AudioVisualPortfolio({ isAdmin }: { isAdmin: boolean }) {
       .subscribe();
 
     return () => {
-      getSupabase().removeChannel(channel);
+      void supabase.removeChannel(channel);
     };
   }, []);
 
@@ -85,6 +94,7 @@ export function AudioVisualPortfolio({ isAdmin }: { isAdmin: boolean }) {
 
   const handleDelete = async (id: string) => {
     if (!window.confirm('Excluir este vídeo?')) return;
+    setDeleteError(null);
     try {
       const { error } = await getSupabase()
         .from('videos')
@@ -92,8 +102,9 @@ export function AudioVisualPortfolio({ isAdmin }: { isAdmin: boolean }) {
         .eq('id', id);
       
       if (error) throw error;
+      await fetchVideos();
     } catch (error) {
-      handleDataError(error, OperationType.DELETE, `videos/${id}`);
+      setDeleteError(handleDataError(error, OperationType.DELETE, `videos/${id}`));
     }
   };
 
@@ -135,7 +146,7 @@ export function AudioVisualPortfolio({ isAdmin }: { isAdmin: boolean }) {
         {showAddForm && (
           <VideoAddForm 
             onClose={() => setShowAddForm(false)} 
-            onSuccess={() => setShowAddForm(false)} 
+            onSuccess={() => { setShowAddForm(false); void fetchVideos(); }}
           />
         )}
       </AnimatePresence>
@@ -173,11 +184,17 @@ export function AudioVisualPortfolio({ isAdmin }: { isAdmin: boolean }) {
           <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">Vídeo & Motion</span>
         </div>
 
+        {deleteError && <p role="alert" className="text-red-400 text-sm">{deleteError}</p>}
         {loading ? (
           <div className="flex overflow-x-auto md:grid md:grid-cols-3 gap-6 pb-8 md:pb-0">
             {[1, 2, 3].map(i => (
               <div key={i} className="min-w-[85vw] md:min-w-0 aspect-9/16 bg-white/5 animate-pulse rounded-4xl" />
             ))}
+          </div>
+        ) : loadError ? (
+          <div role="alert" className="py-20 text-center glass-card rounded-[2.5rem]">
+            <p className="text-zinc-400 text-sm">{loadError}</p>
+            <button onClick={() => void fetchVideos()} className="mt-4 text-street-green text-sm cursor-pointer">Tentar novamente</button>
           </div>
         ) : videos.length === 0 ? (
           <div className="py-20 text-center glass-card rounded-[2.5rem] border-dashed border-zinc-700">
